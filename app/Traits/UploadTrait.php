@@ -11,7 +11,7 @@ trait UploadTrait
         $path = base_path('images/' . $directory);
         $name = time() . rand(1000000, 9999999) . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/images/' . $directory, $name);
-        return 'images/' . $directory.'/'.$name;
+        return 'storage/images/' . $directory.'/'.$name;
     }
     public function deleteFile($file_name, $directory = 'unknown') : void
     {

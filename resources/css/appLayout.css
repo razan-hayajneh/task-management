@@ -183,7 +183,10 @@ aside.shadow {
 .nav-color {
     background-color: #550751;
     width: auto;
-    height: 50px;
+    height: 80px;
+}
+.img-profile{
+    text-align: -webkit-center;
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
@@ -281,4 +284,7 @@ li.el-sub-menu ul li.el-sub-menu div i.el-sub-menu__icon-arrow {
         margin-inline: 20px;
         width: 100%;
     }
+}
+.bg-pink{
+    background-color: #550751;
 }

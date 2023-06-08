@@ -19,8 +19,7 @@
                                             <fold />
                                         </el-icon>
                                     </el-radio-button>
-                                    <el-radio-button :label="true" v-if="isCollapse == false"
-                                        class="float-right"><el-icon>
+                                    <el-radio-button :label="true" v-if="isCollapse == false" class="float-right"><el-icon>
                                             <fold />
                                         </el-icon></el-radio-button>
                                 </el-radio-group>
@@ -28,15 +27,20 @@
                         </div>
 
                         <el-scrollbar class="mb-5">
+                            <Link :href="route('dashboard')" :active="route().current('dashboard')">
                             <el-menu-item index="0">
                                 <el-icon>
                                     <histogram />
                                 </el-icon>
-                                <!-- <Link :href="route('dashboard.get')"> -->
-                                <span v-if="isCollapse == false" class="mx-1">
-                                    {{ __("auth.app.dashboard") }}</span>
-                                <!-- </Link> -->
-                            </el-menu-item>
+                                <span v-if="isCollapse == false" class="mx-1">Dashboard</span>
+                            </el-menu-item> </Link>
+                            <Link :href="route('categories')" :active="route().current('categories.*')">
+                            <el-menu-item index="1">
+                                <el-icon>
+                                    <histogram />
+                                </el-icon>
+                                <span v-if="isCollapse == false" class="mx-1">Dashboard</span>
+                            </el-menu-item> </Link>
                             <div class="p-20"></div>
                         </el-scrollbar>
                     </el-menu>
@@ -48,9 +52,11 @@
                 ]" class="shadow nav-color">
                     <div class="flex">
                         <div>
-                            <el-button @click="drawer = true" v-if="screenWidth <= 767 && drawer == false">
-                                    <el-icon><fold /></el-icon>
-                            </el-button>
+                            <button @click="drawer = true" v-if="screenWidth <= 767 && drawer == false" class="bg-pink">
+                                <el-icon>
+                                    <fold class="text-white my-4 mx-4" />
+                                </el-icon>
+                            </button>
                         </div>
                         <div class="flex-auto pt-2">
                             <Link as="button" @click="logout" class="text-white text-sm profile-float">
@@ -58,19 +64,28 @@
                                 <font-awesome-icon icon="sign-out-alt" />
                             </el-tooltip>
                             </Link>
-                            <el-dropdown class="profile-float">
+                            <el-dropdown class="text-white text-sm profile-float">
                                 <div class="text-center text-white">
-                                    <strong>{{ $page.props.user.name }}</strong>
+                                    <!-- Current Profile Photo -->
+                                    <div class="img-profile mt-2" v-show="!photoPreview">
+                                        <img :src="'http://taskmanage.test/' + $page.props.user.image_url"
+                                            :alt="$page.props.user.full_name" class="rounded-full h-12 w-12 object-cover">
+                                    </div>
+                                    <div>
+                                        <strong>{{ $page.props.user.full_name }}</strong>
+                                        <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                                    </div>
                                 </div>
                                 <template #dropdown>
-                                    <div class="text-center py-6">
-                                        <strong>{{ $page.props.user.email }}</strong>
-                                    </div>
                                     <el-dropdown-menu>
-                                        <!-- <el-dropdown-item>
-                                            <Link :href="route('profile.index')" :active="route().current('profile.index')">
+                                        <el-dropdown-item class="text-center py-6">
+                                            <strong>{{ $page.props.user.email }}</strong>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                            <Link class="dropdown-item" :href="route('profile.show')"
+                                                :active="route().current('profile.show')">
                                             {{ __("auth.app.profile") }}</Link>
-                                        </el-dropdown-item> -->
+                                        </el-dropdown-item>
                                         <el-dropdown-item>
                                             <Link as="button" @click="logout">
                                             {{ __("auth.sign_out") }}
@@ -88,11 +103,12 @@
                         <slot name="titleHeader"> </slot>
                     </div>
                 </titleHeader>
-                <main>                    <slot></slot>
+                <main>
+                    <slot></slot>
                 </main>
             </el-col>
         </el-row>
-        <el-drawer v-model="drawer" size="100%" :with-header="false">
+        <el-drawer v-model="drawer" size="60%" :with-header="false">
             <header id="el-drawer__title" class="el-drawer__header">
                 <span role="heading"><router-link to="/">
                         <img src="/images/logo4.png" class="img-width img-logo" />
@@ -110,10 +126,10 @@
                                 <histogram />
                             </el-icon></el-col>
                         <h3>
-                            <!-- <Link :href="route('dashboard.get')"> -->
+                            <Link :href="route('dashboard')">
                             <span v-if="isCollapse == false" class="mx-1">
                                 {{ __("auth.app.dashboard") }}</span>
-                            <!-- </Link> -->
+                            </Link>
                         </h3>
                     </el-row>
                     </Link>
@@ -172,6 +188,7 @@ export default defineComponent({
         let drawer = ref(false);
         let showMenu = ref(false);
         let screenWidth = window.screen.width;
+
         function closeNav() {
             drawer.value = false;
             showMenu.value = false;

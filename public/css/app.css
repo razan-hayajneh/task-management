@@ -916,9 +916,6 @@ select {
 .prose > :where(:last-child):not(:where([class~="not-prose"] *)) {
   margin-bottom: 0;
 }
-.static {
-  position: static;
-}
 .fixed {
   position: fixed;
 }
@@ -968,6 +965,22 @@ select {
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+.mx-12 {
+  margin-left: 3rem;
+  margin-right: 3rem;
 }
 .ml-3 {
   margin-left: 0.75rem;
@@ -1157,6 +1170,9 @@ select {
 }
 .max-w-6xl {
   max-width: 72rem;
+}
+.max-w-4xl {
+  max-width: 56rem;
 }
 .flex-1 {
   flex: 1 1 0%;
@@ -1718,6 +1734,10 @@ select {
 .ring-opacity-5 {
   --tw-ring-opacity: 0.05;
 }
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -1915,7 +1935,10 @@ aside.shadow {
 .nav-color {
     background-color: #550751;
     width: auto;
-    height: 50px;
+    height: 80px;
+}
+.img-profile{
+    text-align: -webkit-center;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
@@ -1994,6 +2017,9 @@ li.el-sub-menu ul li.el-sub-menu div i.el-sub-menu__icon-arrow {
         width: 100%;
     }
 }
+.bg-pink{
+    background-color: #550751;
+}
 .home_icon {
     float: left;
     margin-top: -30px;
@@ -2050,7 +2076,7 @@ li.el-sub-menu ul li.el-sub-menu div i.el-sub-menu__icon-arrow {
     font-size: 14px;
 }
 .box-card {
-    width: 70%;
+    width: 50%;
     height: 60%;
     margin: 0 auto;
     /* Added */

@@ -26,9 +26,6 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "@coreui/coreui": "^4.1.0",
-        "@coreui/vue": "^4.1.1",
-        "bootstrap": "^5.1.3",
         "@element-plus/icons-vue": "^0.2.6",
         "@fortawesome/fontawesome-svg-core": "^1.2.36",
         "@fortawesome/free-brands-svg-icons": "^5.15.4",
@@ -41,20 +38,21 @@
         "@fullcalendar/timegrid": "^5.11.0",
         "@fullcalendar/vue3": "^5.11.1",
         "autoprefixer": "10.4.5",
-        "barcode": "^0.1.0",
+        "barcode": "^0.0.4",
+        "bootstrap": "^5.1.3",
         "chart.js": "^3.7.1",
         "element-plus": "^1.1.0-beta.8",
         "flatpickr": "^4.6.11",
         "font-awesome": "^4.7.0",
         "laravel-vue-lang": "^3.1.3",
         "moment": "^2.29.4",
-        "sweetalert2": "^11.4.17",
+        "sweetalert2": "^11.4.8",
         "vue-axios": "^3.4.1",
         "vue-barcode": "^1.3.0",
         "vue-country-flag-next": "^2.3.2",
         "vue-flatpickr-component": "^9.0.5",
         "vue-router": "^4.0.15",
         "vue-sweetalert2": "^5.0.5",
-        "vue3-organization-chart": "^1.9.4"
+        "vue3-organization-chart": "^1.8.4"
     }
 }

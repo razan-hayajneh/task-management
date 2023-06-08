@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Traits\UploadTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -9,51 +10,33 @@ use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
+    use UploadTrait;
+
     /**
      * Validate and update the given user's profile information.
-     *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
      */
     public function update($user, array $input)
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'size:10', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 
-        if (isset($input['photo'])) {
-            $user->updateProfilePhoto($input['photo']);
+        if (!empty($user['image_url'])) {
+            $this->deleteFile($user['image_url'], 'profile');
         }
-
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
-            $this->updateVerifiedUser($user, $input);
-        } else {
+        if (isset($input['photo'])) {
+            $input['image_url'] = $this->uploadFile($input['photo'], 'profile');
             $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
+                'image_url' => $input['image_url'],
             ])->save();
         }
-    }
-
-    /**
-     * Update the given verified user's profile information.
-     *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
-     */
-    protected function updateVerifiedUser($user, array $input)
-    {
         $user->forceFill([
-            'name' => $input['name'],
+            'full_name' => $input['full_name'],
             'email' => $input['email'],
-            'email_verified_at' => null,
+            'phone_number' => $input['phone_number'],
         ])->save();
-
-        $user->sendEmailVerificationNotification();
     }
 }

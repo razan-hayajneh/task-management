@@ -19,8 +19,8 @@
                 <jet-label for="photo" value="Photo" />
 
                 <!-- Current Profile Photo -->
-                <div class="mt-2" v-show="! photoPreview">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                <div class="mt-2" v-show="!photoPreview">
+                    <img :src="user.image_url" :alt="user.full_name" class="rounded-full h-20 w-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->
@@ -43,9 +43,9 @@
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="name" value="Name" />
-                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="name" />
-                <jet-input-error :message="form.errors.name" class="mt-2" />
+                <jet-label for="full_name" value="Name" />
+                <jet-input id="full_name" type="text" class="mt-1 block w-full" v-model="form.full_name" autocomplete="name" />
+                <jet-input-error :message="form.errors.full_name" class="mt-2" />
             </div>
 
             <!-- Email -->
@@ -53,6 +53,13 @@
                 <jet-label for="email" value="Email" />
                 <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" />
                 <jet-input-error :message="form.errors.email" class="mt-2" />
+            </div>
+
+            <!-- phone_number -->
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="phone_number" value="Phone Number" />
+                <jet-input id="phone_number" type="number" class="mt-1 block w-full" v-model="form.phone_number" />
+                <jet-input-error :message="form.errors.phone_number" class="mt-2" />
             </div>
         </template>
 
@@ -95,8 +102,10 @@
             return {
                 form: this.$inertia.form({
                     _method: 'PUT',
-                    name: this.user.name,
+                    full_name: this.user.full_name,
                     email: this.user.email,
+                    phone_number: this.user.phone_number,
+                    image_url: this.user.image_url,
                     photo: null,
                 }),
 
