@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,3 +23,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 Route::middleware(['auth:sanctum', 'verified'])->get('/home', [DashboardController::class, 'index'])->name('home');
+Route::get('send-basic-email',[MailController::class,'basic_email']);
+Route::get('send-html-email',[MailController::class,'html_email']);
+Route::get('send-attachment-email',[MailController::class,'attachment_email']);
