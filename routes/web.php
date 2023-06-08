@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MailController;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,3 +28,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/home', [DashboardControll
 Route::get('send-basic-email',[MailController::class,'basic_email']);
 Route::get('send-html-email',[MailController::class,'html_email']);
 Route::get('send-attachment-email',[MailController::class,'attachment_email']);
+Route::get('/email',function ()
+{
+    Mail::to('razanhasan896@gmail.com')->send(new WelcomeMail());
+    return new WelcomeMail();
+});

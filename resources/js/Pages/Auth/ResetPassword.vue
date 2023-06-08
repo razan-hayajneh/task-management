@@ -1,43 +1,53 @@
 <template>
+
     <Head title="Reset Password" />
 
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
+    <div class="semi-circle"></div>
+    <div class="semi-circle-right"></div>
+    <div class="bg-img min-h-screen ">
+        <div class="h-24"></div>
+        <el-card class="box-card">
+            <div class="login-form">
+                <div class="m-5">
 
-        <jet-validation-errors class="mb-4" />
+                    <jet-validation-errors class="mb-4" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus />
+                    <form @submit.prevent="submit">
+                        <div>
+                            <jet-label for="email" value="Email" />
+                            <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus />
+                        </div>
+
+                        <div class="mt-4">
+                            <jet-label for="password" value="Password" />
+                            <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
+                        </div>
+
+                        <div class="mt-4">
+                            <jet-label for="password_confirmation" value="Confirm Password" />
+                            <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
+                        </div>
+
+                        <div class="flex items-center justify-end mt-4">
+                            <jet-button class="ml-4 btn-form" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                Reset Password
+                            </jet-button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="mt-4">
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
-                </jet-button>
-            </div>
-        </form>
-    </jet-authentication-card>
+        </el-card>
+        <div class="semi-circle-bottom"></div>
+    </div>
 </template>
 
 <script>
-    import { defineComponent } from 'vue';
-    import { Head } from '@inertiajs/inertia-vue3';
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+    import {
+        defineComponent
+    } from 'vue';
+    import {
+        Head
+    } from '@inertiajs/inertia-vue3';
     import JetButton from '@/Jetstream/Button.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetLabel from '@/Jetstream/Label.vue'
@@ -46,8 +56,6 @@
     export default defineComponent({
         components: {
             Head,
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
             JetButton,
             JetInput,
             JetLabel,

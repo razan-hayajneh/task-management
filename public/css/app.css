@@ -916,9 +916,6 @@ select {
 .prose > :where(:last-child):not(:where([class~="not-prose"] *)) {
   margin-bottom: 0;
 }
-.static {
-  position: static;
-}
 .fixed {
   position: fixed;
 }
@@ -968,6 +965,14 @@ select {
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 .ml-3 {
   margin-left: 0.75rem;
@@ -1994,6 +1999,9 @@ li.el-sub-menu ul li.el-sub-menu div i.el-sub-menu__icon-arrow {
         width: 100%;
     }
 }
+.bg-pink{
+    background-color: #550751;
+}
 .home_icon {
     float: left;
     margin-top: -30px;
@@ -2050,7 +2058,7 @@ li.el-sub-menu ul li.el-sub-menu div i.el-sub-menu__icon-arrow {
     font-size: 14px;
 }
 .box-card {
-    width: 70%;
+    width: 50%;
     height: 60%;
     margin: 0 auto;
     /* Added */

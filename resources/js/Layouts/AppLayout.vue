@@ -5,9 +5,7 @@
         <el-row>
             <el-col :span="screenWidth > 767 ? isCollapse ? 1 : 3 : 0">
                 <aside class="el-scrollbar shadow" aria-label="Sidebar">
-                    <el-menu :default-active="active" class="el-menu-vertical-demo hight-menu shadow list-hidden"
-                        active-text-color="#ff4de4" background-color="#ffffff " text-color="#550751" :collapse="isCollapse"
-                        @open="handleOpen" @close="handleClose">
+                    <el-menu :default-active="active" class="el-menu-vertical-demo hight-menu shadow list-hidden" active-text-color="#ff4de4" background-color="#ffffff " text-color="#550751" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
                         <div class="flex">
                             <div class="flex-none">
                                 <span v-if="isCollapse == false">
@@ -19,8 +17,7 @@
                                             <fold />
                                         </el-icon>
                                     </el-radio-button>
-                                    <el-radio-button :label="true" v-if="isCollapse == false"
-                                        class="float-right"><el-icon>
+                                    <el-radio-button :label="true" v-if="isCollapse == false" class="float-right"><el-icon>
                                             <fold />
                                         </el-icon></el-radio-button>
                                 </el-radio-group>
@@ -48,9 +45,11 @@
                 ]" class="shadow nav-color">
                     <div class="flex">
                         <div>
-                            <el-button @click="drawer = true" v-if="screenWidth <= 767 && drawer == false">
-                                    <el-icon><fold /></el-icon>
-                            </el-button>
+                            <button @click="drawer = true" v-if="screenWidth <= 767 && drawer == false" class="bg-pink">
+                                <el-icon >
+                                    <fold class="text-white my-4 mx-4" />
+                                </el-icon>
+                            </button>
                         </div>
                         <div class="flex-auto pt-2">
                             <Link as="button" @click="logout" class="text-white text-sm profile-float">
@@ -58,19 +57,20 @@
                                 <font-awesome-icon icon="sign-out-alt" />
                             </el-tooltip>
                             </Link>
-                            <el-dropdown class="profile-float">
+                            <el-dropdown class="text-white text-sm profile-float">
                                 <div class="text-center text-white">
-                                    <strong>{{ $page.props.user.name }}</strong>
+                                    <strong>Welcome, {{ $page.props.user.full_name }}</strong>
+                                    <el-icon class="el-icon--right"><arrow-down /></el-icon>
                                 </div>
                                 <template #dropdown>
-                                    <div class="text-center py-6">
-                                        <strong>{{ $page.props.user.email }}</strong>
-                                    </div>
                                     <el-dropdown-menu>
-                                        <!-- <el-dropdown-item>
-                                            <Link :href="route('profile.index')" :active="route().current('profile.index')">
+                                        <el-dropdown-item class="text-center py-6">
+                                            <strong>{{ $page.props.user.email }}</strong>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                            <Link :href="route('profile')" :active="route().current('profile')">
                                             {{ __("auth.app.profile") }}</Link>
-                                        </el-dropdown-item> -->
+                                        </el-dropdown-item>
                                         <el-dropdown-item>
                                             <Link as="button" @click="logout">
                                             {{ __("auth.sign_out") }}
@@ -88,11 +88,12 @@
                         <slot name="titleHeader"> </slot>
                     </div>
                 </titleHeader>
-                <main>                    <slot></slot>
+                <main>
+                    <slot></slot>
                 </main>
             </el-col>
         </el-row>
-        <el-drawer v-model="drawer" size="100%" :with-header="false">
+        <el-drawer v-model="drawer" size="60%" :with-header="false">
             <header id="el-drawer__title" class="el-drawer__header">
                 <span role="heading"><router-link to="/">
                         <img src="/images/logo4.png" class="img-width img-logo" />
@@ -131,34 +132,16 @@
 </template>
 
 <script>
-import {
-    defineComponent
-} from "vue";
-import {
-    ref
-} from "vue";
-import {
-    Location,
-    Document,
-    Menu as IconMenu,
-    Setting,
-    CloseBold,
-    Fold,
-    EditPen,
-    Notebook,
-    Histogram,
-    Clock,
-} from "@element-plus/icons-vue";
-
-export default defineComponent({
-    props: {
-        title: String,
-    },
-
-    components: {
+    import {
+        defineComponent
+    } from "vue";
+    import {
+        ref
+    } from "vue";
+    import {
         Location,
         Document,
-        IconMenu,
+        Menu as IconMenu,
         Setting,
         CloseBold,
         Fold,
@@ -166,51 +149,70 @@ export default defineComponent({
         Notebook,
         Histogram,
         Clock,
-    },
+    } from "@element-plus/icons-vue";
 
-    setup() {
-        let drawer = ref(false);
-        let showMenu = ref(false);
-        let screenWidth = window.screen.width;
-        function closeNav() {
-            drawer.value = false;
-            showMenu.value = false;
-        }
-
-        return {
-            drawer,
-            showMenu,
-            closeNav,
-            screenWidth
-        };
-    },
-
-    data() {
-        const input = ref("");
-        const isCollapse = ref(false);
-        const pages = {
-            "Admin/Dashboard": "0",
-            "Teacher/Classes/": "1",
-        };
-        let component = ref("0");
-        for (var key in pages) {
-            if (this.$page.component.includes(key)) component = pages[key];
-        }
-        const active = ref(component);
-        return {
-            showingNavigationDropdown: false,
-            input,
-            isCollapse,
-            active,
-
-
-        };
-    },
-
-    methods: {
-        logout() {
-            this.$inertia.post(route("logout"));
+    export default defineComponent({
+        props: {
+            title: String,
         },
-    },
-});
+
+        components: {
+            Location,
+            Document,
+            IconMenu,
+            Setting,
+            CloseBold,
+            Fold,
+            EditPen,
+            Notebook,
+            Histogram,
+            Clock,
+        },
+
+        setup() {
+            let drawer = ref(false);
+            let showMenu = ref(false);
+            let screenWidth = window.screen.width;
+
+            function closeNav() {
+                drawer.value = false;
+                showMenu.value = false;
+            }
+
+            return {
+                drawer,
+                showMenu,
+                closeNav,
+                screenWidth
+            };
+        },
+
+        data() {
+            const input = ref("");
+            const isCollapse = ref(false);
+            const pages = {
+                "Admin/Dashboard": "0",
+                "Teacher/Classes/": "1",
+            };
+            let component = ref("0");
+            for (var key in pages) {
+                if (this.$page.component.includes(key)) component = pages[key];
+            }
+            const active = ref(component);
+            return {
+                showingNavigationDropdown: false,
+                input,
+                isCollapse,
+                active,
+
+
+            };
+        },
+
+        methods: {
+            logout() {
+                this.$inertia.post(route("logout"));
+            },
+        },
+    });
 </script>
