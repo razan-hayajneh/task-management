@@ -15,7 +15,6 @@ class TaskMember extends Model
     public $fillable = [
         'team_member_id',
         'task_id',
-        'permission_id'
     ];
 
     protected $casts = [];
@@ -23,7 +22,6 @@ class TaskMember extends Model
     public static array $rules = [
         'team_member_id' => 'required|exists:team_members,id',
         'task_id' => 'required|exists:tasks,id',
-        'permission_id' => 'required|exists:permissions,id'
     ];
     /**
      * Get the teamMember that owns the ProjectMember
@@ -42,14 +40,5 @@ class TaskMember extends Model
     public function task()
     {
         return $this->belongsTo(Task::class, 'task_id', 'id');
-    }
-    /**
-     * Get the permission that owns the permission
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function permission()
-    {
-        return $this->belongsTo(Permission::class, 'permission_id', 'id');
     }
 }

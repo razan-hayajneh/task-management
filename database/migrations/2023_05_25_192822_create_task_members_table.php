@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id('id');
             $table->foreignId('team_member_id')->references('id')->on('team_members');
             $table->foreignId('task_id')->references('id')->on('tasks');
-            $table->foreignId('permission_id')->references('id')->on('permissions');
             $table->timestamps();
             $table->softDeletes();
         });
