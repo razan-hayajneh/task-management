@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Api\{LoginAPIRequest, RegisterAPIRequest};
+use App\Http\Requests\API\{LoginAPIRequest, RegisterAPIRequest};
 use App\Http\Resources\UserResource;
 use App\Repositories\{TeamMemberRepository, UserRepository};
 use Illuminate\Http\Request;
