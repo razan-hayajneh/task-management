@@ -8,7 +8,8 @@ use App\Models\Task;
 use App\Traits\ResponseTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use InfyOm\Generator\Request\APIRequest;class CreateTaskAPIRequest  extends  APIRequest
+use InfyOm\Generator\Request\APIRequest;
+class CreateTaskAPIRequest  extends  APIRequest
 {
     use ResponseTrait;
     /**

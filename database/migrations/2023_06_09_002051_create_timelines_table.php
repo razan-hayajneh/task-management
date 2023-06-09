@@ -17,10 +17,10 @@ class CreateTimelinesTable extends Migration
     {
         Schema::create('timelines', function (Blueprint $table) {
             $table->id('id');
-            $table->foreignId('task_id')->on('tasks')->reference('id');
+            $table->foreignId('task_id')->references('id')->on('tasks');
             $table->enum('status', TaskStatus::getValues());
             $table->datetime('date');
-            $table->foreignId('updated_by')->on('users')->reference('id');
+            $table->foreignId('updated_by')->references('id')->on('users');
             $table->timestamps();
         });
     }

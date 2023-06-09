@@ -88,8 +88,6 @@ class TaskAPIController extends AppBaseController
     public function update($id, UpdateTaskAPIRequest $request): JsonResponse
     {
         $input = $request->all();
-
-        /** @var Task $task */
         $task = $this->taskRepository->find($id);
         if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not have permission to update this task');
@@ -98,6 +96,7 @@ class TaskAPIController extends AppBaseController
         if (empty($task)) {
             return $this->sendError('Task not found');
         }
+        unset($input['project_id']);
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->update($input, $id);
@@ -107,19 +106,21 @@ class TaskAPIController extends AppBaseController
             DB::rollback();
             return $this->sendError($exception->getMessage());
         }
-
         return $this->sendResponse([], 'Task updated successfully');
     }
     function storeTimeline($taskId, $status): bool
     {
-        $input = [
-            'task_id' => $taskId,
-            'status' => $status,
-            'updated_by' => auth()->user()->id,
-            'date' => Carbon::now()
-        ];
-        $timeline = $this->timelineRepository->create($input);
-        return !empty($timeline);
+        if (!empty($status)) {
+            $input = [
+                'task_id' => $taskId,
+                'status' => $status,
+                'updated_by' => auth()->user()->id,
+                'date' => Carbon::now()
+            ];
+            $timeline = $this->timelineRepository->create($input);
+            return !empty($timeline);
+        }
+        return true;
     }
     public function destroy($id): JsonResponse
     {

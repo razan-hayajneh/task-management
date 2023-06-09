@@ -30,7 +30,7 @@ use InfyOm\Generator\Request\APIRequest;class UpdateTaskAPIRequest  extends  API
     {
         $rules = [
             'name' => 'sometimes',
-            'task_status' => 'sometimes',
+            'task_status' => 'sometimes|in:created,progress,finished',
             'category_id' => 'sometimes|exists:task_categories,id',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date'

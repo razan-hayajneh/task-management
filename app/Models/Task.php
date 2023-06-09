@@ -30,11 +30,11 @@ class Task extends Model
 
     public static array $rules = [
         'name' => 'required',
-        'task_status' => 'required|in:created,pending,on-progress,done',
+        'task_status' => 'required|in:created,progress,finished',
         'project_id' => 'required|exists:projects,id',
         'category_id' => 'required|exists:task_categories,id',
-        'start_date' => 'nullable|date',
-        'end_date' => 'nullable|date'
+        'start_date' => 'sometimes|date',
+        'end_date' => 'sometimes|date'
     ];
     /**
      * Get the category that owns the categoryMember
