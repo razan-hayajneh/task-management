@@ -9,6 +9,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use InfyOm\Generator\Request\APIRequest;
+
 class UpdateProjectAPIRequest  extends  APIRequest
 {
     use ResponseTrait;
@@ -25,10 +26,11 @@ class UpdateProjectAPIRequest  extends  APIRequest
      */
     public function rules(): array
     {
-        $rules = Project::$rules;
-        $rules['name'] = 'sometimes';
-        $rules['end_date'] = 'sometimes|date';
-        $rules['project_status'] = 'sometimes|in:created,waiting,pending,progress,finished';
+        $rules = [
+            'name' => 'sometimes',
+            'end_date' => 'sometimes|date',
+            'project_status' => 'sometimes|in:created,waiting,pending,progress,finished'
+        ];
         return $rules;
     }
 
