@@ -37,14 +37,10 @@ class TaskAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        if (!$this->isAuthorProjectManager($request['project_id'])) {
-            return $this->sendError('You are not manager for this project');
+        if (!$this->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasAccessPermissionOnTask($request['project_id'], auth()->user()->id)) {
+            return $this->sendError('You do not permission to update this task');
         }
-        $tasks = $this->taskRepository->all(
-            ['project_id' => $request['project_id']],
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $tasks = $this->taskRepository->all($request->only(['project_id','start_date']));
 
         return $this->sendResponse(TaskResource::collection($tasks), 'Tasks retrieved successfully');
     }
