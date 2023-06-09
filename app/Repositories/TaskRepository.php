@@ -5,7 +5,6 @@ namespace App\Repositories;
 use App\Models\Task;
 use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Ramsey\Uuid\Type\Integer;
 
 class TaskRepository extends BaseRepository
 {
@@ -99,9 +98,9 @@ class TaskRepository extends BaseRepository
 
     public function isAuthorProjectManager($projectId): bool
     {
-        return  $this->model()::whereProjectId($projectId)->WhereHas('project', function ($project) {
+        return $this->model()::whereProjectId($projectId)->whereHas('project', function ($project) {
             $project->whereManagerId(auth()->user()->id);
-        });
+        })->count();
     }
     public function model(): string
     {
