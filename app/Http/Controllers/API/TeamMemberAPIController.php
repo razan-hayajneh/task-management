@@ -9,8 +9,7 @@ use App\Repositories\TeamMemberRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\AllTeamMemberResource;
-use App\Http\Resources\TeamMemberResource;
+use App\Http\Resources\TeamMemberAPIResource;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -38,7 +37,7 @@ class TeamMemberAPIController extends AppBaseController
     {
         $teamMembers = $this->teamMemberRepository->all();
 
-        return $this->sendResponse(TeamMemberResource::collection($teamMembers), 'Team Members retrieved successfully');
+        return $this->sendResponse(TeamMemberAPIResource::collection($teamMembers), 'Team Members retrieved successfully');
     }
 
 
@@ -61,7 +60,7 @@ class TeamMemberAPIController extends AppBaseController
             DB::rollback();
             return $this->sendError($exception->getMessage());
         }
-        return $this->sendResponse(new TeamMemberResource($teamMember), 'Team Member saved successfully');
+        return $this->sendResponse(new TeamMemberAPIResource($teamMember), 'Team Member saved successfully');
     }
 
     /**
@@ -77,7 +76,7 @@ class TeamMemberAPIController extends AppBaseController
             return $this->sendError('Team Member not found');
         }
 
-        return $this->sendResponse(new TeamMemberResource($teamMember), 'Team Member retrieved successfully');
+        return $this->sendResponse(new TeamMemberAPIResource($teamMember), 'Team Member retrieved successfully');
     }
 
     /**
@@ -105,7 +104,7 @@ class TeamMemberAPIController extends AppBaseController
             return $this->sendError($exception->getMessage());
         }
 
-        return $this->sendResponse(new TeamMemberResource($teamMember), 'TeamMember updated successfully');
+        return $this->sendResponse(new TeamMemberAPIResource($teamMember), 'TeamMember updated successfully');
     }
 
     /**

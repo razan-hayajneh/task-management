@@ -7,37 +7,44 @@
                     </el-icon></el-col>
                 <h3>
                     <Link :href="route('dashboard')" :active="route().current('dashboard')">
-                    <span class="mx-1">
-                        {{ __("auth.app.dashboard") }}</span>
+                    <span class="mx-1">Dashboard</span>
                     </Link>
                 </h3>
             </el-row>
-            <hr style="
-                width: 100%;
-                text-align: left;
-                margin-left: 0;
-                padding: 0.5rem;
-            " />
+            <HorizontalLine />
             <el-row class="font-bold text-color icon-school inline-flex">
-                <Link :href="route('admins.index')" :active="route().current('admins.*')">
                 <el-col :span="2"> <el-icon>
                         <UserFilled />
                     </el-icon></el-col>
                 <h3>
-                    <span class="mx-1">
-                        {{ __("auth.app.dashboard") }}</span>
-
+                    <DrawerItem label="Admins" routeName="admins" />
                 </h3>
-                </Link>
             </el-row>
-            <hr style="
-                width: 100%;
-                text-align: left;
-                margin-left: 0;
-                padding: 0.5rem;
-            " />
+            <HorizontalLine />
+            <el-row class="font-bold text-color icon-school inline-flex">
+                <el-col :span="2">
+                    <el-icon>
+                        <UserFilled />
+                    </el-icon>
+                </el-col>
+                <h3>
+                    <DrawerItem label="Team Members" routeName="teamMembers" />
+                </h3>
+            </el-row>
+            <HorizontalLine />
+            <el-row class="font-bold text-color icon-school inline-flex">
+                <el-col :span="2">
+                    <el-icon>
+                        <Document />
+                    </el-icon>
+                </el-col>
+                <h3>
+                    <DrawerItem label="Categories" routeName="categories" />
+                </h3>
+            </el-row>
+            <HorizontalLine />
         </ul>
-        <hr style="width: 100%; text-align: left; margin-left: 0; padding: 0.5rem" />
+        <HorizontalLine />
     </div>
 </template>
 
@@ -51,10 +58,10 @@ import {
     User,
     UserFilled,
     Document,
-    Menu as IconMenu,
-    Fold,
     Histogram,
 } from "@element-plus/icons-vue";
+import HorizontalLine from "../Action/HorizontalLine.vue";
+import DrawerItem from "../Action/DrawerItem.vue";
 
 export default defineComponent({
     props: {
@@ -63,11 +70,11 @@ export default defineComponent({
 
     components: {
         Document,
-        IconMenu,
-        Fold,
         Histogram,
         User,
-        UserFilled
+        UserFilled,
+        HorizontalLine,
+        DrawerItem,
     },
 
 

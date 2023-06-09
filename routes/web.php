@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified'], 'namespace' => 'App\
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', TaskCategoryController::class);
     Route::resource('admins', AdminController::class);
+    Route::resource('teamMembers', TeamMemberController::class);
 });
 Route::get('/email', function () {
     Mail::to('razanhasan896@gmail.com')->send(new WelcomeMail());

@@ -128,7 +128,8 @@ export default defineComponent({
         const pages = {
             "Admin/Dashboard": "0",
             "Admin/Admin": "1",
-            "Admin/Category": "2",
+            "Admin/TeamMember": "2",
+            "Admin/Category": "3",
         };
         let component = ref("0");
         for (var key in pages) {

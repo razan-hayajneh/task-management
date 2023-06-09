@@ -4,7 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TeamMemberResource extends JsonResource
+class TeamMemberResource
+ extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +17,11 @@ class TeamMemberResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_details' => $this->user ? UserResource::make($this->user) : null,
-            'user_id' => $this->user_id,
+            'full_name' => $this->user?->full_name,
+            'phone_number' => $this->user?->phone_number,
+            'email' => $this->user?->email,
+            'user_type' => $this->user?->user_type,
+            'image_url' => $this->user?->image_url?url('storage/'.$this->user?->image_url):null,
             'member_type' => $this->member_type,
             'created_at' => $this->created_at?date_format($this->created_at, "Y-m-d H:s"):null,
             'updated_at' => $this->updated_at?date_format($this->updated_at, "Y-m-d H:s"):null

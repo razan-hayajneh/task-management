@@ -16,7 +16,7 @@ class TaskMemberResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'team_member' => TeamMemberResource::make($this->teamMember),
+            'team_member' => TeamMemberAPIResource::make($this->teamMember),
             'task_id' => $this->task_id,
             'permission_id' => $this->permission_id,
            'created_at' => $this->created_at?date_format($this->created_at, "Y-m-d H:s"):null,

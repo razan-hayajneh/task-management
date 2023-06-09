@@ -45,6 +45,15 @@ class AdminController extends AppBaseController
     }
 
     /**
+     * Display  Create Admin Form.
+     * GET|HEAD /admins
+     */
+    public function create()
+    {
+        return Inertia::render('Admin/Admin/Create');
+    }
+
+    /**
      * Store a newly created Admin in storage.
      * POST /admins
      */
@@ -65,12 +74,6 @@ class AdminController extends AppBaseController
         }
         return redirect(route('admins.index'))->with(['message' => 'Admin Saved Successfully', 'type' => 'success']);
     }
-
-    public function create()
-    {
-        return Inertia::render('Admin/Admin/Create');
-    }
-
     /**
      * Display the specified Admin.
      * GET|HEAD /admins/{id}
@@ -143,6 +146,6 @@ class AdminController extends AppBaseController
             return $this->sendError($exception->getMessage());
         }
         $message = 'Admin deleted successfully';
-        return redirect(route('categories.index'))->with(['message' => $message, 'type' => 'success']);
+        return redirect(route('admins.index'))->with(['message' => $message, 'type' => 'success']);
     }
 }

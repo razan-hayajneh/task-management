@@ -26,7 +26,6 @@ Route::group(['middleware' => ['auth-check'], 'namespace' => 'App\Http\Controlle
         Route::post('update-profile-info', 'ProfileAPIController@update');
         Route::post('update-profile-image', 'ProfileAPIController@updateImage');
         Route::group(['middleware' => ['admin-check']], function () {
-            Route::resource('team-members', TeamMemberAPIController::class);
             Route::resource('permissions', PermissionAPIController::class);
         });
         Route::group(['middleware' => ['team-member-check']], function () {

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('email')->unique();
             $table->string('user_type');
-            $table->string('image_url');
+            $table->string('image_url')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
