@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\LoginAPIRequest;
 use App\Http\Requests\Api\RegisterAPIRequest;
 use App\Http\Resources\UserResource;
 use App\Repositories\TeamMemberRepository;
@@ -43,7 +43,7 @@ class AuthAPIController extends AppBaseController
         return $this->sendResponse([], 'You have signed up successfully');
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginAPIRequest $request)
     {
         $userToken = null;
         $credentials = $request->only(['email', 'password']);

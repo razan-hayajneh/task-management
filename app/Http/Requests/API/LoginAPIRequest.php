@@ -1,14 +1,15 @@
 <?php
 
+
 namespace App\Http\Requests\Api;
 
 use App\Traits\ResponseTrait;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use InfyOm\Generator\Request\APIRequest;
 
-class LoginRequest extends FormRequest
+class LoginAPIRequest extends APIRequest
 {
     use ResponseTrait;
     public function __construct(Request $request)
