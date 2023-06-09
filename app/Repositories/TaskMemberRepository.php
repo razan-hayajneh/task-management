@@ -2,10 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Task;
 use App\Models\TaskMember;
 use App\Repositories\BaseRepository;
-use Illuminate\Database\Eloquent\Collection;
 
 class TaskMemberRepository extends BaseRepository
 {

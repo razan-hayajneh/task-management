@@ -76,10 +76,10 @@ class ProfileAPIController extends AppBaseController
         if (empty($user)) {
             return $this->sendError('User not found');
         }
-        if (!empty($user['image_url'])) {
-            $this->deleteFile($request['image_url'], 'profile');
-        }
         if ($request->has('image_url')) {
+            if (!empty($user['image_url'])) {
+                $this->deleteFile($user['image_url'], 'profile');
+            }
             $input['image_url'] = $this->uploadFile($request['image_url'], 'profile');
         }
 

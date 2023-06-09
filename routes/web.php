@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -18,7 +20,16 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return redirect(route('login'));
 });
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
-Route::middleware(['auth:sanctum', 'verified'])->get('/home', [DashboardController::class, 'index'])->name('home');
+Route::group(['middleware' => ['auth:sanctum', 'verified'], 'namespace' => 'App\Http\Controllers\Admin'], function () {
+
+    Route::get('/profile', function () {
+        return Inertia::render('Profile/Show');
+    })->name('profile.show');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('categories', TaskCategoryController::class);
+    Route::resource('admins', AdminController::class);
+});
+Route::get('/email', function () {
+    Mail::to('razanhasan896@gmail.com')->send(new WelcomeMail());
+    return new WelcomeMail();
+});

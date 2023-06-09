@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Api\LoginRequest;
-use App\Http\Requests\Api\RegisterAPIRequest;
+use App\Http\Requests\Api\{LoginAPIRequest, RegisterAPIRequest};
 use App\Http\Resources\UserResource;
-use App\Repositories\TeamMemberRepository;
-use App\Repositories\UserRepository;
+use App\Repositories\{TeamMemberRepository, UserRepository};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{DB, Hash};
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthAPIController extends AppBaseController
@@ -43,7 +40,7 @@ class AuthAPIController extends AppBaseController
         return $this->sendResponse([], 'You have signed up successfully');
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginAPIRequest $request)
     {
         $userToken = null;
         $credentials = $request->only(['email', 'password']);

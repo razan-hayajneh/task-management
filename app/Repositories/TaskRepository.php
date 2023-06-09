@@ -30,6 +30,14 @@ class TaskRepository extends BaseRepository
             });
         })->get();
     }
+    public function hasAccessPermissionOnTask($projectId,$userId): bool
+    {
+        return $this->model()::whereProjectId($projectId)->whereHas('members', function ($query) use ($userId) {
+            $query->whereHas('teamMember', function ($teamMember) use ($userId) {
+                $teamMember->where('user_id',$userId);
+            });
+        })->count();
+    }
     public function hasUpdatePermissionOnTask($taskId,$userId): bool
     {
         return $this->model()::whereId($taskId)->whereHas('members', function ($query) use ($userId) {

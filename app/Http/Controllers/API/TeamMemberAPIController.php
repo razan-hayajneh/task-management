@@ -36,25 +36,11 @@ class TeamMemberAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $teamMembers = $this->teamMemberRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $teamMembers = $this->teamMemberRepository->all();
 
         return $this->sendResponse(TeamMemberResource::collection($teamMembers), 'Team Members retrieved successfully');
     }
 
-    /**
-     * Display a listing of the TeamMembers.
-     * GET|HEAD /all-team-members
-     */
-    public function getAll(): JsonResponse
-    {
-        $teamMembers = $this->teamMemberRepository->all();
-
-        return $this->sendResponse(AllTeamMemberResource::collection($teamMembers), 'Team Members retrieved successfully');
-    }
 
     /**
      * Store a newly created TeamMember in storage.

@@ -2,14 +2,13 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Enum\UserType;
 use App\Traits\ResponseTrait;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use InfyOm\Generator\Request\APIRequest;
 
-class RegisterAPIRequest extends FormRequest
+class RegisterAPIRequest extends  APIRequest
 {
     use ResponseTrait;
     public function __construct(Request $request)

@@ -26,6 +26,7 @@ class MyTasksAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
+
         $tasks = $this->taskRepository->myTasks(auth()->user()->id);
         return $this->sendResponse(TaskResource::collection($tasks), 'Tasks retrieved successfully');
     }
