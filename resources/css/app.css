@@ -3,5 +3,6 @@
 @import 'tailwindcss/utilities';
 
 
-@import 'appLayout.css';
 @import 'login.css';
+@import 'appLayout.css';
+@import 'crud.css';

@@ -26,7 +26,6 @@ Route::group(['middleware' => ['auth-check'], 'namespace' => 'App\Http\Controlle
         Route::post('update-profile-info', 'ProfileAPIController@update');
         Route::post('update-profile-image', 'ProfileAPIController@updateImage');
         Route::group(['middleware' => ['admin-check']], function () {
-            Route::resource('admins', AdminAPIController::class);
             Route::resource('team-members', TeamMemberAPIController::class);
             Route::resource('task-categories', TaskCategoryAPIController::class);
             Route::resource('permissions', PermissionAPIController::class);
@@ -40,6 +39,9 @@ Route::group(['middleware' => ['auth-check'], 'namespace' => 'App\Http\Controlle
             Route::get('my-tasks', 'MyTasksAPIController@index');
             Route::resource('reports', ReportAPIController::class);
             Route::resource('notifications', NotificationAPIController::class);
+            Route::get('timelines', 'TimelineAPIController@index');
         });
     });
 });
+
+

@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\TaskResource;
 use App\Repositories\ProjectRepository;
+use App\Repositories\TimelineRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -18,14 +20,15 @@ use Illuminate\Support\Facades\DB;
  */
 class TaskAPIController extends AppBaseController
 {
-    /** @var  TaskRepository */
-    private $taskRepository;
-    private $projectRepository;
+    private TaskRepository $taskRepository;
+    private ProjectRepository $projectRepository;
+    private TimelineRepository $timelineRepository;
 
-    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, TimelineRepository $timelineRepository)
     {
         $this->taskRepository = $taskRepository;
         $this->projectRepository = $projectRepository;
+        $this->timelineRepository = $timelineRepository;
     }
 
     /**
@@ -60,6 +63,7 @@ class TaskAPIController extends AppBaseController
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->create($input);
+            $this->storeTimeline($task->id,$input['task_status']);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
@@ -94,7 +98,7 @@ class TaskAPIController extends AppBaseController
 
         /** @var Task $task */
         $task = $this->taskRepository->find($id);
-        if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasUpdatePermissionOnTask($id,auth()->user()->id)) {
+        if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not permission to update this task');
         }
 
@@ -104,6 +108,7 @@ class TaskAPIController extends AppBaseController
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->update($input, $id);
+            $this->storeTimeline($id,$input['task_status']);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
@@ -112,13 +117,17 @@ class TaskAPIController extends AppBaseController
 
         return $this->sendResponse([], 'Task updated successfully');
     }
-
-    /**
-     * Remove the specified Task from storage.
-     * DELETE /tasks/{id}
-     *
-     * @throws \Exception
-     */
+    function storeTimeline($taskId, $status): bool
+    {
+        $input = [
+            'task_id' => $taskId,
+            'status' => $status,
+            'updated_by' => auth()->user()->id,
+            'date' => Carbon::now()
+        ];
+        $timeline = $this->timelineRepository->create($input);
+        return !empty($timeline);
+    }
     public function destroy($id): JsonResponse
     {
         /** @var Task $task */
@@ -127,7 +136,7 @@ class TaskAPIController extends AppBaseController
         if (empty($task)) {
             return $this->sendError('Task not found');
         }
-        if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasDeletePermissionOnTask($id,auth()->user()->id)) {
+        if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasDeletePermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not permission to delete this task');
         }
         $task->delete();

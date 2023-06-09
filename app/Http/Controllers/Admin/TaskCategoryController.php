@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\CreateTaskCategoryRequest;
+use App\Http\Requests\Admin\CreateCategoryRequest;
 use App\Models\TaskCategory;
 use App\Repositories\TaskCategoryRepository;
 use Illuminate\Http\Request;
@@ -22,14 +22,13 @@ class TaskCategoryController extends AppBaseController
     {
         $this->taskCategoryRepository = $taskCategoryRepo;
     }
-
+    /**
+     * Display a listing of the categories.
+     * GET|HEAD /categories
+     */
     public function index(Request $request)
     {
-        $taskCategories = $this->taskCategoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $taskCategories = $this->taskCategoryRepository->paginate(10);
         return Inertia::render('Admin/Category/Index')
             ->with([
                 'categories' => TaskCategoryResource::collection($taskCategories),
@@ -37,13 +36,19 @@ class TaskCategoryController extends AppBaseController
                 'type' => $request->session()->get('type')
             ]);
     }
-
+    /**
+     * Display a form to create a new category.
+     * GET|HEAD /categories/create
+     */
     public function create()
     {
         return Inertia::render('Admin/Category/Create');
     }
-
-    public function store(CreateTaskCategoryRequest $request)
+    /**
+     * Store a newly created Admin in storage.
+     * POST /categories
+     */
+    public function store(CreateCategoryRequest $request)
     {
         $input = $request->all();
 
@@ -51,7 +56,10 @@ class TaskCategoryController extends AppBaseController
 
         return redirect(route('categories.index'))->with(['message' => 'Category Saved Successfully', 'type' => 'success']);
     }
-
+    /**
+     * Display a form to update the category.
+     * GET|HEAD /categories/{id}/edit
+     */
     public function edit($id)
     {
         $taskCategory = $this->taskCategoryRepository->find($id);
@@ -61,19 +69,26 @@ class TaskCategoryController extends AppBaseController
         }
         return Inertia::render('Admin/Category/Edit')->with(['category' => $taskCategory]);
     }
-    public function update($id,CreateTaskCategoryRequest $request)
+    /**
+     * Update the specified category in storage.
+     * PUT/PATCH /categories/{id}
+     */
+    public function update($id, CreateCategoryRequest $request)
     {
         $taskCategory = $this->taskCategoryRepository->find($id);
         if (empty($taskCategory)) {
             return redirect(route('categories.index'))->with('message', 'Category Not Found');
         }
         $taskCategory = $this->taskCategoryRepository->update($request->all(), $id);
-        $message = 'Task Category Updated Successfully' ;
-        return redirect(route('categories.index'))->with(['message'=>$message,'type'=>'success']);
+        $message = 'Task Category Updated Successfully';
+        return redirect(route('categories.index'))->with(['message' => $message, 'type' => 'success']);
     }
+    /**
+     * Remove the specified category from storage.
+     * DELETE /categories/{id}
+     */
     public function destroy($id)
     {
-        /** @var TaskCategory $taskCategory */
         $taskCategory = $this->taskCategoryRepository->find($id);
 
         if (empty($taskCategory)) {
@@ -82,6 +97,7 @@ class TaskCategoryController extends AppBaseController
 
         $taskCategory->delete();
 
-        return $this->sendSuccess('Task Category deleted successfully');
+        $message = 'Task Category deleted successfully';
+        return redirect(route('categories.index'))->with(['message' => $message, 'type' => 'success']);
     }
 }

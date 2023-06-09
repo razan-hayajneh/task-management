@@ -4,6 +4,7 @@
         <Head :title="title" />
         <el-row>
             <el-col :span="screenWidth > 767 ? isCollapse ? 1 : 3 : 0">
+
                 <aside class="el-scrollbar shadow" aria-label="Sidebar">
                     <el-menu :default-active="active" class="el-menu-vertical-demo hight-menu shadow list-hidden"
                         active-text-color="#ff4de4" background-color="#ffffff " text-color="#550751" :collapse="isCollapse"
@@ -26,25 +27,10 @@
                             </div>
                         </div>
 
-                        <el-scrollbar class="mb-5">
-                            <Link :href="route('dashboard')" :active="route().current('dashboard')">
-                            <el-menu-item index="0">
-                                <el-icon>
-                                    <histogram />
-                                </el-icon>
-                                <span v-if="isCollapse == false" class="mx-1">Dashboard</span>
-                            </el-menu-item> </Link>
-                            <Link :href="route('categories')" :active="route().current('categories.*')">
-                            <el-menu-item index="1">
-                                <el-icon>
-                                    <histogram />
-                                </el-icon>
-                                <span v-if="isCollapse == false" class="mx-1">Dashboard</span>
-                            </el-menu-item> </Link>
-                            <div class="p-20"></div>
-                        </el-scrollbar>
+                        <SideBarMenu :isCollapse="isCollapse" />
+
                     </el-menu>
-                </aside>
+                </aside>F
             </el-col>
             <el-col :span="screenWidth > 767 ? isCollapse ? 23 : 21 : 24">
                 <header v-bind:class="[
@@ -58,43 +44,7 @@
                                 </el-icon>
                             </button>
                         </div>
-                        <div class="flex-auto pt-2">
-                            <Link as="button" @click="logout" class="text-white text-sm profile-float">
-                            <el-tooltip class="box-item" effect="dark" :content="__('auth.sign_out')" placement="button">
-                                <font-awesome-icon icon="sign-out-alt" />
-                            </el-tooltip>
-                            </Link>
-                            <el-dropdown class="text-white text-sm profile-float">
-                                <div class="text-center text-white">
-                                    <!-- Current Profile Photo -->
-                                    <div class="img-profile mt-2" v-show="!photoPreview">
-                                        <img :src="'http://taskmanage.test/' + $page.props.user.image_url"
-                                            :alt="$page.props.user.full_name" class="rounded-full h-12 w-12 object-cover">
-                                    </div>
-                                    <div>
-                                        <strong>{{ $page.props.user.full_name }}</strong>
-                                        <el-icon class="el-icon--right"><arrow-down /></el-icon>
-                                    </div>
-                                </div>
-                                <template #dropdown>
-                                    <el-dropdown-menu>
-                                        <el-dropdown-item class="text-center py-6">
-                                            <strong>{{ $page.props.user.email }}</strong>
-                                        </el-dropdown-item>
-                                        <el-dropdown-item>
-                                            <Link class="dropdown-item" :href="route('profile.show')"
-                                                :active="route().current('profile.show')">
-                                            {{ __("auth.app.profile") }}</Link>
-                                        </el-dropdown-item>
-                                        <el-dropdown-item>
-                                            <Link as="button" @click="logout">
-                                            {{ __("auth.sign_out") }}
-                                            </Link>
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </template>
-                            </el-dropdown>
-                        </div>
+                        <NavBar/>
                     </div>
                 </header>
                 <!-- Page Heading -->
@@ -118,30 +68,7 @@
                     <i class="el-drawer__close el-icon el-icon-close" style="width: 0.5em"></i>
                 </button>
             </header>
-            <div>
-                <ul>
-                    <Link :href="'/'">
-                    <el-row class="font-bold text-color icon-school inline-flex">
-                        <el-col :span="2"> <el-icon>
-                                <histogram />
-                            </el-icon></el-col>
-                        <h3>
-                            <Link :href="route('dashboard')">
-                            <span v-if="isCollapse == false" class="mx-1">
-                                {{ __("auth.app.dashboard") }}</span>
-                            </Link>
-                        </h3>
-                    </el-row>
-                    </Link>
-                    <hr style="
-                width: 100%;
-                text-align: left;
-                margin-left: 0;
-                padding: 0.5rem;
-              " />
-                </ul>
-                <hr style="width: 100%; text-align: left; margin-left: 0; padding: 0.5rem" />
-            </div>
+            <Drawer />
         </el-drawer>
     </div>
 </template>
@@ -154,17 +81,14 @@ import {
     ref
 } from "vue";
 import {
-    Location,
+    User,
     Document,
     Menu as IconMenu,
-    Setting,
-    CloseBold,
     Fold,
-    EditPen,
-    Notebook,
-    Histogram,
-    Clock,
 } from "@element-plus/icons-vue";
+import SideBarMenu from "@/Components/AppLayout/SideBarMenu";
+import Drawer from "@/Components/AppLayout/Drawer.vue";
+import NavBar from "@/Components/AppLayout/NavBar.vue";
 
 export default defineComponent({
     props: {
@@ -172,16 +96,13 @@ export default defineComponent({
     },
 
     components: {
-        Location,
         Document,
         IconMenu,
-        Setting,
-        CloseBold,
         Fold,
-        EditPen,
-        Notebook,
-        Histogram,
-        Clock,
+        User,
+        SideBarMenu,
+        Drawer,
+        NavBar,
     },
 
     setup() {
@@ -203,11 +124,11 @@ export default defineComponent({
     },
 
     data() {
-        const input = ref("");
         const isCollapse = ref(false);
         const pages = {
             "Admin/Dashboard": "0",
-            "Teacher/Classes/": "1",
+            "Admin/Admin": "1",
+            "Admin/Category": "2",
         };
         let component = ref("0");
         for (var key in pages) {
@@ -215,19 +136,10 @@ export default defineComponent({
         }
         const active = ref(component);
         return {
-            showingNavigationDropdown: false,
-            input,
             isCollapse,
             active,
-
-
         };
     },
 
-    methods: {
-        logout() {
-            this.$inertia.post(route("logout"));
-        },
-    },
 });
 </script>
