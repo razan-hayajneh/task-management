@@ -10,7 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\TaskResource;
-use App\Repositories\ProjectRepository;
+use App\Models\TeamMember;
+use App\Repositories\TaskMemberRepository;
 use App\Repositories\TimelineRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -18,13 +19,13 @@ use Illuminate\Support\Facades\DB;
 class TaskAPIController extends AppBaseController
 {
     private TaskRepository $taskRepository;
-    private ProjectRepository $projectRepository;
+    private TaskMemberRepository $taskMemberRepository;
     private TimelineRepository $timelineRepository;
 
-    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, TimelineRepository $timelineRepository)
+    public function __construct(TaskRepository $taskRepository, TaskMemberRepository $taskMemberRepository, TimelineRepository $timelineRepository)
     {
+        $this->taskMemberRepository = $taskMemberRepository;
         $this->taskRepository = $taskRepository;
-        $this->projectRepository = $projectRepository;
         $this->timelineRepository = $timelineRepository;
     }
 
@@ -34,11 +35,10 @@ class TaskAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        if (!$this->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasAccessPermissionOnTask($request['project_id'], auth()->user()->id)) {
-            return $this->sendError('You do not have permission to get these task');
+        if (!$this->taskRepository->hasAccessPermissionOnTask($request['project_id'], auth()->user()->id)) {
+            return $this->sendError('You do not have permission to get tasks in this project');
         }
         $tasks = $this->taskRepository->all($request->only(['project_id', 'start_date']));
-
         return $this->sendResponse(TaskResource::collection($tasks), 'Tasks retrieved successfully');
     }
 
@@ -48,7 +48,7 @@ class TaskAPIController extends AppBaseController
      */
     public function store(CreateTaskAPIRequest $request): JsonResponse
     {
-        if (!$this->isAuthorProjectManager($request['project_id'])) {
+        if (!$this->taskRepository->hasCreateNewTaskPermission($request['project_id'], auth()->user()->id)) {
             return $this->sendError('You are not manager for this project');
         }
         $input = $request->all();
@@ -56,6 +56,7 @@ class TaskAPIController extends AppBaseController
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->create($input);
+            $this->storeTaskMember($task->id);
             $this->storeTimeline($task->id, $input['task_status']);
             DB::commit();
         } catch (\Exception $exception) {
@@ -64,7 +65,22 @@ class TaskAPIController extends AppBaseController
         }
         return $this->sendResponse([], 'Task saved successfully');
     }
-
+    public function storeTaskMember($taskId): bool
+    {
+        DB::beginTransaction();
+        try {
+            $teamMember = TeamMember::whereUserId(auth()->user()->id)->first();
+            if (empty($teamMember)) {
+                return null;
+            }
+            $taskMember = $this->taskMemberRepository->create(['task_id' => $taskId, 'team_member_id' => $teamMember->id]);
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return false;
+        }
+        return  $taskMember;
+    }
     /**
      * Display the specified Task.
      * GET|HEAD /tasks/{id}
@@ -83,14 +99,41 @@ class TaskAPIController extends AppBaseController
 
     /**
      * Update the specified Task in storage.
+     * PUT/PATCH /task-status/{id}
+     */
+    public function updateStatus($id, Request $request): JsonResponse
+    {
+        $input = $request->all();
+        $task = $this->taskRepository->find($id);
+        if (!$this->taskRepository->hasUpdateStatusPermissionOnTask($id, auth()->user()->id)) {
+            return $this->sendError('You do not have permission to Create new task');
+        }
+
+        if (empty($task)) {
+            return $this->sendError('Task not found');
+        }
+        unset($input['project_id']);
+        DB::beginTransaction();
+        try {
+            $task = $this->taskRepository->update($request->only(['task_status']), $id);
+            $this->storeTimeline($id, $input['task_status']);
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return $this->sendError($exception->getMessage());
+        }
+        return $this->sendResponse([], 'Task Status Updated successfully');
+    }
+    /**
+     * Update the specified Task in storage.
      * PUT/PATCH /tasks/{id}
      */
     public function update($id, UpdateTaskAPIRequest $request): JsonResponse
     {
         $input = $request->all();
         $task = $this->taskRepository->find($id);
-        if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
-            return $this->sendError('You do not have permission to update this task');
+        if (!$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
+            return $this->sendError('You do not have permission to Create new task');
         }
 
         if (empty($task)) {
@@ -130,17 +173,11 @@ class TaskAPIController extends AppBaseController
         if (empty($task)) {
             return $this->sendError('Task not found');
         }
-        if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasDeletePermissionOnTask($id, auth()->user()->id)) {
+        if (!$this->taskRepository->hasDeletePermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not have permission to delete this task');
         }
         $task->delete();
 
         return $this->sendSuccess('Task deleted successfully');
-    }
-    public function isAuthorProjectManager($projectId): bool
-    {
-        if ($projectId == null) return false;
-        $project = $this->projectRepository->find($projectId);
-        return $project ? $project['manager_id'] == auth()->user()->id : false;
     }
 }

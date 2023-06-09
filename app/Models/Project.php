@@ -52,9 +52,9 @@ class Project extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function teamMembers()
+    public function projectMembers()
     {
-        return $this->hasMany(TeamMember::class);
+        return $this->hasMany(ProjectMember::class);
     }
     /**
      * Get all of the tasks for the Project

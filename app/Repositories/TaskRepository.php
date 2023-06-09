@@ -26,35 +26,72 @@ class TaskRepository extends BaseRepository
     {
         return $this->model()::whereHas('members', function ($query) use ($id) {
             $query->whereHas('teamMember', function ($teamMember) use ($id) {
-                $teamMember->where('user_id',$id);
+                $teamMember->where('user_id', $id);
             });
         })->get();
     }
-    public function hasAccessPermissionOnTask($projectId,$userId): bool
+    public function hasAccessPermissionOnTask($projectId, $userId): bool
     {
-        return $this->model()::whereProjectId($projectId)->whereHas('members', function ($query) use ($userId) {
-            $query->whereHas('teamMember', function ($teamMember) use ($userId) {
-                $teamMember->where('user_id',$userId);
+        return $this->model()::whereProjectId($projectId)->where(function ($query) use ($userId) {
+            $query->whereHas('members', function ($member) use ($userId) {
+                $member->whereHas('teamMember', function ($teamMember) use ($userId) {
+                    $teamMember->where('user_id', $userId);
+                });
+            })->orWhereHas('project', function ($project) use ($userId) {
+                $project->whereManagerId($userId)->orWhereHas('projectMembers', function ($projectMember) use ($userId) {
+                    $projectMember->whereHas('teamMember', function ($teamMember) use ($userId) {
+                        $teamMember->where('user_id', $userId);
+                    });
+                });
             });
         })->count();
     }
-    public function hasUpdatePermissionOnTask($taskId,$userId): bool
+
+    public function hasCreateNewTaskPermission($taskId, $userId): bool
     {
-        return $this->model()::whereId($taskId)->whereHas('members', function ($query) use ($userId) {
-            $query->whereHas('teamMember', function ($teamMember) use ($userId) {
-                $teamMember->where('user_id',$userId);
-            })->whereHas('permission', function ($permission) {
-                $permission->where('name','update');
+        return $this->model()::whereId($taskId)->WhereHas('project', function ($project) use ($userId) {
+            $project->whereManagerId($userId)->orWhereHas('projectMembers', function ($projectMember) use ($userId) {
+                $projectMember->whereHas('teamMember', function ($teamMember) use ($userId) {
+                    $teamMember->where('user_id', $userId);
+                });
             });
         })->count();
     }
-    public function hasDeletePermissionOnTask($taskId,$userId): bool
+    public function hasUpdatePermissionOnTask($taskId, $userId): bool
     {
-        return $this->model()::whereId($taskId)->whereHas('members', function ($query) use ($userId) {
-            $query->whereHas('teamMember', function ($teamMember) use ($userId) {
-                $teamMember->where('user_id',$userId);
-            })->whereHas('permission', function ($permission) {
-                $permission->where('name','delete');
+        return $this->model()::whereId($taskId)->where(function ($query) use ($userId) {
+            $query->whereHas('members', function ($member) use ($userId) {
+                $member->whereHas('teamMember', function ($teamMember) use ($userId) {
+                    $teamMember->where('user_id', $userId);
+                });
+            })->orWhereHas('project', function ($project) use ($userId) {
+                $project->whereManagerId($userId);
+            });
+        })->count();
+    }
+    public function hasUpdateStatusPermissionOnTask($taskId, $userId): bool
+    {
+        return $this->model()::whereId($taskId)->where(function ($query) use ($userId) {
+            $query->whereHas('members', function ($member) use ($userId) {
+                $member->whereHas('teamMember', function ($teamMember) use ($userId) {
+                    $teamMember->where('user_id', $userId);
+                });
+            })->orWhereHas('project', function ($project) use ($userId) {
+                $project->whereManagerId($userId)->whereHas('projectMembers', function ($projectMember) use ($userId) {
+                    $projectMember->whereHas('teamMember', function ($teamMember) use ($userId) {
+                        $teamMember->where('user_id', $userId);
+                    });
+                });
+            });
+        })->count();
+    }
+    public function hasDeletePermissionOnTask($taskId, $userId): bool
+    {
+        return $this->model()::whereId($taskId)->WhereHas('project', function ($project) use ($userId) {
+            $project->whereManagerId($userId)->orWhereHas('projectMembers', function ($projectMember) use ($userId) {
+                $projectMember->whereHas('teamMember', function ($teamMember) use ($userId) {
+                    $teamMember->where('user_id', $userId);
+                });
             });
         })->count();
     }
