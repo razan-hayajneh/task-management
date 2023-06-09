@@ -73,4 +73,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Project::class, 'manager_id', 'id');
     }
+    /**
+     * Get the teamMember associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function teamMember(): HasOne
+    {
+        return $this->hasOne(TeamMember::class);
+    }
 }

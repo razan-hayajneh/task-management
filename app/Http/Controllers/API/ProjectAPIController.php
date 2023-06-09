@@ -32,7 +32,7 @@ class ProjectAPIController extends AppBaseController
     public function index(Request $request): JsonResponse
     {
         $projects = $this->projectRepository->all(
-           ['manager_id'=>auth()->user()->id],
+            ['manager_id' => auth()->user()->id],
             $request->get('skip'),
             $request->get('limit')
         );
@@ -84,16 +84,17 @@ class ProjectAPIController extends AppBaseController
     {
         $input = $request->all();
 
-        /** @var Project $project */
         $project = $this->projectRepository->find($id);
 
         if (empty($project)) {
             return $this->sendError('Project not found');
         }
-
+        if (!$this->isAuthorProjectManager($id)) {
+            return $this->sendError('You do not have permission to update this task');
+        }
         DB::beginTransaction();
         try {
-            $project = $this->projectRepository->update($request->except(['manager_id', 'limit']), $id);
+            $project = $this->projectRepository->update($request->except(['manager_id']), $id);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
@@ -117,9 +118,17 @@ class ProjectAPIController extends AppBaseController
         if (empty($project)) {
             return $this->sendError('Project not found');
         }
-
+        if (!$this->isAuthorProjectManager($id)) {
+            return $this->sendError('You do not have permission to update this task');
+        }
         $project->delete();
 
         return $this->sendSuccess('Project deleted successfully');
+    }
+    public function isAuthorProjectManager($projectId): bool
+    {
+        if ($projectId == null) return false;
+        $project = $this->projectRepository->find($projectId);
+        return $project ? $project['manager_id'] == auth()->user()->id : false;
     }
 }

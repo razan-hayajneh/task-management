@@ -27,7 +27,7 @@ class UpdateProjectAPIRequest  extends  APIRequest
     {
         $rules = Project::$rules;
         $rules['name'] = 'sometimes';
-        $rules['start_date'] = 'sometimes|date';
+        $rules['end_date'] = 'sometimes|date';
         $rules['project_status'] = 'sometimes|in:created,waiting,pending,progress,finished';
         return $rules;
     }
