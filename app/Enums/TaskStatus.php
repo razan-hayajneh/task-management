@@ -8,16 +8,12 @@ use BenSampo\Enum\Enum;
 
 /**
  * @method static static CREATED()
- * @method static static PENDING()
- * @method static static WAITING()
  * @method static static PROGRESS()
  * @method static static FINISHED()
  */
-final class ProjectStatus extends Enum
+final class TaskStatus extends Enum
 {
     const CREATED = 'created';
-    const PENDING = 'pending';
-    const WAITING = 'waiting';
     const PROGRESS = 'progress';
     const FINISHED = 'finished';
 }

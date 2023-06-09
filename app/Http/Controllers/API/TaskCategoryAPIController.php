@@ -8,12 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\TaskCategoryResource;
 
-/**
- * Class TaskCategoryAPIController
- */
 class TaskCategoryAPIController extends AppBaseController
 {
-    /** @var  TaskCategoryRepository */
     private $taskCategoryRepository;
 
     public function __construct(TaskCategoryRepository $taskCategoryRepo)
@@ -28,7 +24,6 @@ class TaskCategoryAPIController extends AppBaseController
     public function index(Request $request): JsonResponse
     {
         $taskCategories = $this->taskCategoryRepository->all();
-
         return $this->sendResponse(TaskCategoryResource::collection($taskCategories), 'Task Categories retrieved successfully');
     }
 

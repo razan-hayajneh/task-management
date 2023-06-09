@@ -15,9 +15,6 @@ use App\Repositories\TimelineRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Class TaskAPIController
- */
 class TaskAPIController extends AppBaseController
 {
     private TaskRepository $taskRepository;
