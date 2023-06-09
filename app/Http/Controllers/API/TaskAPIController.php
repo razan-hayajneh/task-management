@@ -99,6 +99,33 @@ class TaskAPIController extends AppBaseController
 
     /**
      * Update the specified Task in storage.
+     * PUT/PATCH /task-status/{id}
+     */
+    public function updateStatus($id, Request $request): JsonResponse
+    {
+        $input = $request->all();
+        $task = $this->taskRepository->find($id);
+        if (!$this->taskRepository->hasUpdateStatusPermissionOnTask($id, auth()->user()->id)) {
+            return $this->sendError('You do not have permission to Create new task');
+        }
+
+        if (empty($task)) {
+            return $this->sendError('Task not found');
+        }
+        unset($input['project_id']);
+        DB::beginTransaction();
+        try {
+            $task = $this->taskRepository->update($request->only(['task_status']), $id);
+            $this->storeTimeline($id, $input['task_status']);
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return $this->sendError($exception->getMessage());
+        }
+        return $this->sendResponse([], 'Task Status Updated successfully');
+    }
+    /**
+     * Update the specified Task in storage.
      * PUT/PATCH /tasks/{id}
      */
     public function update($id, UpdateTaskAPIRequest $request): JsonResponse
