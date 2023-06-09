@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Enum\UserType;
 use App\Traits\ResponseTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;

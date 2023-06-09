@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Api\LoginAPIRequest;
-use App\Http\Requests\Api\RegisterAPIRequest;
+use App\Http\Requests\Api\{LoginAPIRequest, RegisterAPIRequest};
 use App\Http\Resources\UserResource;
-use App\Repositories\TeamMemberRepository;
-use App\Repositories\UserRepository;
+use App\Repositories\{TeamMemberRepository, UserRepository};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{DB, Hash};
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthAPIController extends AppBaseController
