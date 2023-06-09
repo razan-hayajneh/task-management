@@ -3,18 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Enums\TaskStatus;
-use App\Http\Requests\API\CreateTaskAPIRequest;
-use App\Http\Requests\API\UpdateTaskAPIRequest;
-use App\Models\Task;
 use App\Repositories\TaskRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\TaskResource;
-use App\Repositories\ProjectRepository;
-use App\Repositories\TimelineRepository;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class TaskCountAPIController extends AppBaseController
 {

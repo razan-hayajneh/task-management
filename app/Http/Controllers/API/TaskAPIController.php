@@ -35,7 +35,7 @@ class TaskAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        if (!$this->taskRepository->hasAccessPermissionOnTask($request['project_id'], auth()->user()->id)) {
+        if (!$this->taskRepository->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasAccessPermissionOnTask($request['project_id'], auth()->user()->id)) {
             return $this->sendError('You do not have permission to get tasks in this project');
         }
         $tasks = $this->taskRepository->all($request->only(['project_id', 'start_date']));
@@ -48,7 +48,7 @@ class TaskAPIController extends AppBaseController
      */
     public function store(CreateTaskAPIRequest $request): JsonResponse
     {
-        if (!$this->taskRepository->hasCreateNewTaskPermission($request['project_id'], auth()->user()->id)) {
+        if (!$this->taskRepository->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasCreateNewTaskPermission($request['project_id'], auth()->user()->id)) {
             return $this->sendError('You are not manager for this project');
         }
         $input = $request->all();
@@ -105,7 +105,7 @@ class TaskAPIController extends AppBaseController
     {
         $input = $request->all();
         $task = $this->taskRepository->find($id);
-        if (!$this->taskRepository->hasUpdateStatusPermissionOnTask($id, auth()->user()->id)) {
+        if (!$this->taskRepository->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasUpdateStatusPermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not have permission to Create new task');
         }
 
@@ -132,7 +132,7 @@ class TaskAPIController extends AppBaseController
     {
         $input = $request->all();
         $task = $this->taskRepository->find($id);
-        if (!$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
+        if (!$this->taskRepository->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not have permission to Create new task');
         }
 
@@ -173,7 +173,7 @@ class TaskAPIController extends AppBaseController
         if (empty($task)) {
             return $this->sendError('Task not found');
         }
-        if (!$this->taskRepository->hasDeletePermissionOnTask($id, auth()->user()->id)) {
+        if (!$this->taskRepository->isAuthorProjectManager($id) && !$this->taskRepository->hasDeletePermissionOnTask($id, auth()->user()->id)) {
             return $this->sendError('You do not have permission to delete this task');
         }
         $task->delete();
