@@ -38,9 +38,9 @@ class TaskAPIController extends AppBaseController
     public function index(Request $request): JsonResponse
     {
         if (!$this->isAuthorProjectManager($request['project_id']) && !$this->taskRepository->hasAccessPermissionOnTask($request['project_id'], auth()->user()->id)) {
-            return $this->sendError('You do not permission to update this task');
+            return $this->sendError('You do not have permission to get these task');
         }
-        $tasks = $this->taskRepository->all($request->only(['project_id','start_date']));
+        $tasks = $this->taskRepository->all($request->only(['project_id', 'start_date']));
 
         return $this->sendResponse(TaskResource::collection($tasks), 'Tasks retrieved successfully');
     }
@@ -59,7 +59,7 @@ class TaskAPIController extends AppBaseController
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->create($input);
-            $this->storeTimeline($task->id,$input['task_status']);
+            $this->storeTimeline($task->id, $input['task_status']);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
@@ -95,7 +95,7 @@ class TaskAPIController extends AppBaseController
         /** @var Task $task */
         $task = $this->taskRepository->find($id);
         if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasUpdatePermissionOnTask($id, auth()->user()->id)) {
-            return $this->sendError('You do not permission to update this task');
+            return $this->sendError('You do not have permission to update this task');
         }
 
         if (empty($task)) {
@@ -104,7 +104,7 @@ class TaskAPIController extends AppBaseController
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->update($input, $id);
-            $this->storeTimeline($id,$input['task_status']);
+            $this->storeTimeline($id, $input['task_status']);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
@@ -133,7 +133,7 @@ class TaskAPIController extends AppBaseController
             return $this->sendError('Task not found');
         }
         if (!$this->isAuthorProjectManager($task['project_id']) && !$this->taskRepository->hasDeletePermissionOnTask($id, auth()->user()->id)) {
-            return $this->sendError('You do not permission to delete this task');
+            return $this->sendError('You do not have permission to delete this task');
         }
         $task->delete();
 
@@ -143,6 +143,6 @@ class TaskAPIController extends AppBaseController
     {
         if ($projectId == null) return false;
         $project = $this->projectRepository->find($projectId);
-        return $project['manager_id'] == auth()->user()->id;
+        return $project ? $project['manager_id'] == auth()->user()->id : false;
     }
 }
