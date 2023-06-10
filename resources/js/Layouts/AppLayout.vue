@@ -16,7 +16,7 @@
                             </div>
                             <div class="flex-auto">
                                 <el-radio-group v-model="isCollapse">
-                                    <el-radio-button :label="false" v-if="isCollapse == true" class="p-1"><el-icon>
+                                    <el-radio-button :label="false" v-if="isCollapse == true" class="p-1 py-4"><el-icon>
                                             <fold />
                                         </el-icon>
                                     </el-radio-button>
