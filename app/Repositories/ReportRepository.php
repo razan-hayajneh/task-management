@@ -11,7 +11,8 @@ class ReportRepository extends BaseRepository
         'name',
         'content',
         'project_id',
-        'task_id'
+        'task_id',
+        'created_by'
     ];
 
     public function getFieldsSearchable(): array

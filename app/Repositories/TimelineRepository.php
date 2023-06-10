@@ -5,12 +5,6 @@ namespace App\Repositories;
 use App\Models\Timeline;
 use App\Repositories\BaseRepository;
 
-/**
- * Class TimelineRepository
- * @package App\Repositories
- * @version June 9, 2023, 12:20 am EEST
- */
-
 class TimelineRepository extends BaseRepository
 {
 

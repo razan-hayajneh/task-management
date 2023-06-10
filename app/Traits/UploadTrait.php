@@ -7,7 +7,6 @@ trait UploadTrait
 
     public function uploadFile($file, $directory = 'unknown') : string
     {
-        // $path = storage_path('images/' . $directory);
         $path = base_path('images/' . $directory);
         $name = time() . rand(1000000, 9999999) . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/images/' . $directory, $name);

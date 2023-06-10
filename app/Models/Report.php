@@ -16,7 +16,8 @@ class Report extends Model
         'name',
         'content',
         'project_id',
-        'task_id'
+        'task_id',
+        'created_by'
     ];
 
     protected $casts = [
@@ -32,22 +33,25 @@ class Report extends Model
     ];
 
     /**
-     * Get the project that owns the ProjectMember
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the project that owns the report
      */
-    public function project()
+    public function project():BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
     }
 
     /**
-     * Get the task that owns the taskMember
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the task that owns the report
      */
-    public function task()
+    public function task():BelongsTo
     {
         return $this->belongsTo(Task::class, 'task_id', 'id');
+    }
+    /**
+     * Get the user that owns the report
+     */
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }

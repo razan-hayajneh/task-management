@@ -32,9 +32,7 @@ class ReportAPIController extends AppBaseController
     public function index(Request $request): JsonResponse
     {
         $reports = $this->reportRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
+            $request->only(['task_id', 'project_id']),
         );
 
         return $this->sendResponse(ReportResource::collection($reports), 'Reports retrieved successfully');
@@ -47,7 +45,7 @@ class ReportAPIController extends AppBaseController
     public function store(CreateReportAPIRequest $request): JsonResponse
     {
         $input = $request->all();
-
+        $input['created_by']=auth()->user()->id;
         DB::beginTransaction();
         try {
             $report = $this->reportRepository->create($input);
@@ -83,11 +81,13 @@ class ReportAPIController extends AppBaseController
     {
         $input = $request->all();
 
-        /** @var Report $report */
         $report = $this->reportRepository->find($id);
 
         if (empty($report)) {
             return $this->sendError('Report not found');
+        }
+        if($report['created_by']!=auth()->user()->id){
+            return $this->sendError('You Can not update this Report');
         }
         DB::beginTransaction();
         try {
@@ -116,6 +116,9 @@ class ReportAPIController extends AppBaseController
             return $this->sendError('Report not found');
         }
 
+        if($report['created_by']!=auth()->user()->id){
+            return $this->sendError('You Can not delete this Report');
+        }
         $report->delete();
 
         return $this->sendSuccess('Report deleted successfully');

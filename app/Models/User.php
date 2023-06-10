@@ -47,36 +47,28 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
      */
-    public function getJWTIdentifier()
+    public function getJWTIdentifier():mixed
     {
         return $this->getKey();
     }
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
     /**
      * Get all of the projectsAsManger for the TeamMember
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function projectsAsManger()
+    public function projectsAsManger():HasMany
     {
         return $this->hasMany(Project::class, 'manager_id', 'id');
     }
     /**
      * Get the teamMember associated with the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function teamMember(): HasOne
     {

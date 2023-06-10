@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('content');
             $table->foreignId('project_id')->references('id')->on('projects');
             $table->foreignId('task_id')->references('id')->on('tasks');
+            $table->foreignId('created_by')->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });
