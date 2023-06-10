@@ -4,7 +4,7 @@
             <div class="text-center text-white">
                 <!-- Current Profile Photo -->
                 <div class="img-profile mt-2" v-show="!photoPreview">
-                    <img :src="'http://taskmanage.test/' + $page.props.user.image_url" :alt="$page.props.user.full_name"
+                    <img :src="$page.props.user.image_url" :alt="$page.props.user.full_name"
                         class="rounded-full h-12 w-12 object-cover">
                 </div>
                 <div>
