@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Task;
+use App\Models\Project;
 use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -108,9 +109,7 @@ class TaskRepository extends BaseRepository
 
     public function isAuthorProjectManager($projectId): bool
     {
-        return $this->model()::whereProjectId($projectId)->whereHas('project', function ($project) {
-            $project->whereManagerId(auth()->user()->id);
-        })->count();
+        return Project::whereId($projectId)->whereManagerId(auth()->user()->id)->count();
     }
     public function model(): string
     {
