@@ -31,7 +31,7 @@ class TaskMemberAPIController extends AppBaseController
     public function index(Request $request): JsonResponse
     {
         $taskMembers = $this->taskMemberRepository->all(
-            ['task_id' => $request['id']],
+            ['task_id' => $request['task_id']],
             $request->get('skip'),
             $request->get('limit')
         );

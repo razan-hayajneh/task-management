@@ -71,7 +71,7 @@ class TaskAPIController extends AppBaseController
         try {
             $teamMember = TeamMember::whereUserId(auth()->user()->id)->first();
             if (empty($teamMember)) {
-                return null;
+                return false;
             }
             $taskMember = $this->taskMemberRepository->create(['task_id' => $taskId, 'team_member_id' => $teamMember->id]);
             DB::commit();

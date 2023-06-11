@@ -90,7 +90,7 @@ class ProjectAPIController extends AppBaseController
             return $this->sendError('Project not found');
         }
         if (!$this->isAuthorProjectManager($id)) {
-            return $this->sendError('You do not have permission to update this task');
+            return $this->sendError('You do not have permission to update this project');
         }
         DB::beginTransaction();
         try {
