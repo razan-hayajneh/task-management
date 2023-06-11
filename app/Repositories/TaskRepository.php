@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Task;
-use App\Models\Project;
 use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -23,13 +22,23 @@ class TaskRepository extends BaseRepository
         return $this->fieldSearchable;
     }
 
-    public function myTasks($id): Collection
+    public function getMyTasks($id): Collection
     {
-        return $this->model()::whereHas('members', function ($query) use ($id) {
+        $myTasks=$this->model()::whereHas('members', function ($query) use ($id) {
             $query->whereHas('teamMember', function ($teamMember) use ($id) {
                 $teamMember->where('user_id', $id);
             });
         })->get();
+        return $myTasks;
+    }
+    public function getMyTasksByDate($id,$startDate): Collection
+    {
+        $myTasks=$this->model()::whereStartDate($startDate)->whereHas('members', function ($query) use ($id) {
+            $query->whereHas('teamMember', function ($teamMember) use ($id) {
+                $teamMember->where('user_id', $id);
+            });
+        })->get();
+        return $myTasks;
     }
     public function hasAccessPermissionOnTask($projectId, $userId): bool
     {
@@ -99,7 +108,9 @@ class TaskRepository extends BaseRepository
 
     public function isAuthorProjectManager($projectId): bool
     {
-        return Project::whereId($projectId)->whereManagerId(auth()->user()->id)->count();
+        return $this->model()::whereProjectId($projectId)->whereHas('project', function ($project) {
+            $project->whereManagerId(auth()->user()->id);
+        })->count();
     }
     public function model(): string
     {
